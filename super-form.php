@@ -53,21 +53,22 @@ function superform_form(){
         
         echo "<p><em>Thank you $first_name</em>, we will get in touch with you!</p>";
 
-        } else {
-            echo '<form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="post">';
-            echo '<p>';
-            echo 'First name (required) <br/>';
-            echo '<input type="text" name="first_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["first_name"] ) ? esc_attr( $_POST["first_name"] ) : '' ) . '" size="40" />';
-            echo '</p>';
-            echo 'Last name (required) <br/>';
-            echo '<input type="text" name="last_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["last_name"] ) ? esc_attr( $_POST["last_name"] ) : '' ) . '" size="40" />';
-            echo '</p>';
-            echo 'Your Email (required) <br/>';
-            echo '<input type="email" name="email" value="' . ( isset( $_POST["email"] ) ? esc_attr( $_POST["email"] ) : '' ) . '" size="40" />';
-            echo '</p>';
-            echo '<p><input type="submit" name="superform-submitted" value="Send"></p>';
-            echo '</form>';
-        }
+    } else {
+
+        echo '<form action="" method="post">';
+        echo '<p>';
+        echo 'First name (required) <br/>';
+        echo '<input type="text" name="first_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["first_name"] ) ? esc_attr( $_POST["first_name"] ) : '' ) . '" size="40" />';
+        echo '</p>';
+        echo 'Last name (required) <br/>';
+        echo '<input type="text" name="last_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["last_name"] ) ? esc_attr( $_POST["last_name"] ) : '' ) . '" size="40" />';
+        echo '</p>';
+        echo 'Your Email (required) <br/>';
+        echo '<input type="email" name="email" value="' . ( isset( $_POST["email"] ) ? esc_attr( $_POST["email"] ) : '' ) . '" size="40" />';
+        echo '</p>';
+        echo '<p><input type="submit" name="superform-submitted" value="Send"></p>';
+        echo '</form>';
+    }
 }
     
 function superform_menu() {
@@ -106,7 +107,7 @@ function display_superform_entries(){
         echo "</table>";
 
         } else {
-                echo "<p>No entries found!</p>";
+                echo "<p><em>No entries found!</em></p>";
             }
 }
         
