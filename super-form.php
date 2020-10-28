@@ -29,10 +29,10 @@ function superform_install() {
         PRIMARY KEY  (id)
         ) $charset_collate;";
         
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-        dbDelta( $sql );
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
         
-        add_option( 'superform_db_version', $superform_db_version );
+    add_option( 'superform_db_version', $superform_db_version );
 }
     
 function superform_form(){
