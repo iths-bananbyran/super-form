@@ -35,5 +35,42 @@ function superform_install() {
 	add_option( 'superform_db_version', $superform_db_version );
 }
 
+function superform_menu() {
+    add_menu_page(
+        "Superform Dashboard", 
+        "Superform Dashboard", 
+        "manage_options",
+        "superform",
+        "display_superform_entries");
+}
+
+function display_superform_entries(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'superform';
+    $retrieve_entries = $wpdb->get_results( "SELECT * FROM $table_name" );
+
+    echo "<h2>Superform Dashboard</h2>";
+    
+    if($retrieve_entries){
+        echo "<table><tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th>";
+
+        foreach ($retrieve_entries as $entry) {
+            echo "<tr>";
+            echo "<td>$entry->ID</td>";
+            echo "<td>$entry->first_name</td>";
+            echo "<td>$entry->last_name</td>";
+            echo "<td>$entry->email</td>";
+            echo "</tr>";
+        }
+
+        echo "</table>";
+    } else {
+        echo "<p>No entries found!</p>";
+    }
+}
+
+add_action("admin_menu", "superform_menu");
+
 register_activation_hook( __FILE__, 'superform_install' );
 add_action('wp_enqueue_scripts','enqueue_related_pages_scripts_and_styles');
+
