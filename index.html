@@ -4,43 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SuperForm</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/superform_styles.css">
 </head>
 <body>
   <h1>SuperForm</h1>
 
   <form name="superform">
+    <div class="superform-form-container">
 
-    <label for="surename">Förnamn</label>
-    <input type="text" name="surename" id="surename"><br>
+        <div class="superform-field-container">
+          <label for="surname">Förnamn</label>
+          <input type="text" name="surname" id="surname"><br>
+        </div>
+      
+        <div class="superform-field-container">
+          <label for="lastname">Efternamn</label>
+          <input type="text" name="lastname" id="lastname"><br>
+        </div>
+        
+      <div class="superform-field-container">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email"><br>
+      </div>
 
-    <label for="lastname">Efternamn</label>
-    <input type="text" name="lastname" id="lastname"><br>
+      <input type="submit" value="submit" id="submit">
+    </div>
 
-    <label for="idnumber">Personnummer</label>
-    <input type="text" name="idnumber" id="idnumber"><br>
-
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email"><br>
-
-    <label for="telephone">Telefon</label>
-    <input type="text" name="telephone" id="telephone"><br>
-
-    <label for="address">Adress</label>
-    <input type="text" name="address" id="address"><br>
-
-    <label for="address2">Adress 2</label>
-    <input type="text" name="address2" id="address2"><br>
-
-    <label for="zipcode">Postnummer</label>
-    <input type="text" name="zipcode" id="zipcode"><br>
-
-    <label for="city">Postort</label>
-    <input type="text" name="city" id="city"><br>
-
-    <input type="submit" value="submit" id="submit">
   </form>
 
-  <script src="scripts/validation.js"></script>
+  <script src="scripts/superform_validation.js"></script>
 </body>
 </html>
