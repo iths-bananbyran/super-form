@@ -35,6 +35,41 @@ function superform_install() {
 	add_option( 'superform_db_version', $superform_db_version );
 }
 
+function superform_form(){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'superform';
+
+    if(isset($_POST['superform-submitted'])){
+        $first_name = sanitize_text_field( $_POST["first_name"] );
+        $last_name = sanitize_text_field( $_POST["last_name"] );
+        $email = sanitize_email( $_POST["email"] );
+
+        $wpdb->insert($table_name, array(
+            'time'=> date("Y-m-d H:i:s"),
+            'first_name'=>$first_name,
+            'last_name'=>$last_name,
+            'email'=>$email,
+        ));
+        echo "<p><em>Thank you $first_name</em>, we will get in touch with you!</p>";
+    } else {
+
+        
+            echo '<form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="post">';
+            echo '<p>';
+            echo 'First name (required) <br/>';
+            echo '<input type="text" name="first_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["first_name"] ) ? esc_attr( $_POST["first_name"] ) : '' ) . '" size="40" />';
+            echo '</p>';
+            echo 'Last name (required) <br/>';
+            echo '<input type="text" name="last_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["last_name"] ) ? esc_attr( $_POST["last_name"] ) : '' ) . '" size="40" />';
+            echo '</p>';
+            echo 'Your Email (required) <br/>';
+            echo '<input type="email" name="email" value="' . ( isset( $_POST["email"] ) ? esc_attr( $_POST["email"] ) : '' ) . '" size="40" />';
+            echo '</p>';
+            echo '<p><input type="submit" name="superform-submitted" value="Send"></p>';
+            echo '</form>';
+    }
+}
+
 function superform_menu() {
     add_menu_page(
         "Superform Dashboard", 
@@ -56,7 +91,7 @@ function display_superform_entries(){
 
         foreach ($retrieve_entries as $entry) {
             echo "<tr>";
-            echo "<td>$entry->ID</td>";
+            echo "<td>$entry->id</td>";
             echo "<td>$entry->first_name</td>";
             echo "<td>$entry->last_name</td>";
             echo "<td>$entry->email</td>";
@@ -69,8 +104,13 @@ function display_superform_entries(){
     }
 }
 
-add_action("admin_menu", "superform_menu");
+function superform_shortcode() {
+    ob_start();
+    superform_form();
+    return ob_get_clean();
+}
 
+add_action("admin_menu", "superform_menu");
 register_activation_hook( __FILE__, 'superform_install' );
 add_action('wp_enqueue_scripts','enqueue_related_pages_scripts_and_styles');
-
+add_shortcode('superform', 'superform_shortcode');
