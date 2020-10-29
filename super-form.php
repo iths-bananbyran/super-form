@@ -8,8 +8,8 @@
 */
 
 function enqueue_related_pages_scripts_and_styles(){
-    // wp_enqueue_style('superform-styles', plugins_url('/css/superform-styles.css', __FILE__));
-    wp_enqueue_script('hello', plugins_url( '/scripts/hello.js' , __FILE__ ));
+    wp_enqueue_style('superform_styles', plugins_url('/css/superform_styles.css', __FILE__));
+    wp_enqueue_script('superform_validation', plugins_url( '/scripts/superform_validation.js' , __FILE__ ));
 }
 
 function superform_install() {
@@ -40,8 +40,8 @@ function superform_form(){
     $table_name = $wpdb->prefix . 'superform';
         
     if (isset($_POST['superform-submitted'])){
-        $first_name = sanitize_text_field( $_POST["first_name"] );
-        $last_name = sanitize_text_field( $_POST["last_name"] );
+        $first_name = sanitize_text_field( $_POST["firstname"] );
+        $last_name = sanitize_text_field( $_POST["lastname"] );
         $email = sanitize_email( $_POST["email"] );
             
         $wpdb->insert($table_name, array(
@@ -55,18 +55,25 @@ function superform_form(){
 
     } else {
 
-        echo '<form action="" method="post">';
-        echo '<p>';
-        echo 'First name (required) <br/>';
-        echo '<input type="text" name="first_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["first_name"] ) ? esc_attr( $_POST["first_name"] ) : '' ) . '" size="40" />';
-        echo '</p>';
-        echo 'Last name (required) <br/>';
-        echo '<input type="text" name="last_name" pattern="[a-zA-Z0-9 ]+" value="' . ( isset( $_POST["last_name"] ) ? esc_attr( $_POST["last_name"] ) : '' ) . '" size="40" />';
-        echo '</p>';
-        echo 'Your Email (required) <br/>';
-        echo '<input type="email" name="email" value="' . ( isset( $_POST["email"] ) ? esc_attr( $_POST["email"] ) : '' ) . '" size="40" />';
-        echo '</p>';
-        echo '<p><input type="submit" name="superform-submitted" value="Send"></p>';
+        echo '<form action="" method="post" name="superform">';
+        echo '<div class="superform-form-container">';
+        echo '<div class="superform-field-container">';
+        echo '<label for="firstname">First name</label>';
+        echo '<input type="text" id="firstname" name="firstname" value="' . ( isset( $_POST["firstname"] ) ? esc_attr( $_POST["firstname"] ) : '' ) . '" required />';
+        echo '<p id="firstname-message" class="message hidden">""</p>';
+        echo '</div>';
+        echo '<div class="superform-field-container">';
+        echo '<label for="lastname">Last name</label>';
+        echo '<input type="text" id="lastname" name="lastname" value="' . ( isset( $_POST["lastname"] ) ? esc_attr( $_POST["lastname"] ) : '' ) . '" required />';
+        echo '<p id="lastname-message" class="message hidden">""</p>';
+        echo '</div>';
+        echo '<div class="superform-field-container">';
+        echo '<label for="email">Email</label>';
+        echo '<input type="email" id="email" name="email" value="' . ( isset( $_POST["email"] ) ? esc_attr( $_POST["email"] ) : '' ) . '" required />';
+        echo '<p id="email-message" class="message hidden">""</p>';
+        echo '</div>';
+        echo '<input type="submit" name="superform-submitted" value="Send">';
+        echo '<div>';
         echo '</form>';
     }
 }
@@ -92,7 +99,7 @@ function display_superform_entries(){
     if ($retrieve_entries){
         
         echo "<h2>Your entries so far:</h2>";
-        echo "<table><tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th>";
+        echo "<table><tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Action</th>";
                 
         foreach ($retrieve_entries as $entry) {
             
@@ -101,6 +108,12 @@ function display_superform_entries(){
             echo "<td>$entry->first_name</td>";
             echo "<td>$entry->last_name</td>";
             echo "<td>$entry->email</td>";
+            echo "<td><form action='admin-post.php' method='post'>";
+            wp_nonce_field( 'delete_row_event_' . $entry->id );
+            echo "<input type='hidden' name='action' value='delete_row_event'>";
+            echo "<input type='hidden' name='eventid' value='$entry->id'>";
+            echo "<input type='submit' class='delete' value='Delete' /></td>
+            </form>";
             echo "</tr>";
         }
                 
@@ -118,8 +131,23 @@ function superform_shortcode() {
     return ob_get_clean();
 }
         
+add_action('wp_enqueue_scripts','enqueue_related_pages_scripts_and_styles');
 add_action("admin_menu", "superform_menu");
 register_activation_hook( __FILE__, 'superform_install' );
-add_action('wp_enqueue_scripts','enqueue_related_pages_scripts_and_styles');
 add_shortcode('superform', 'superform_shortcode');
+add_action( 'admin_post_delete_row_event', function () {
+
+    if (!empty($_POST['eventid'])) {
+      $event_id = $_POST['eventid'];
+      check_admin_referer( 'delete_row_event_' . $event_id );
+      global $wpdb;
+      $table_name = $wpdb->prefix . 'superform';
+      $wpdb->delete($table_name,
+                     [ 'id' => $event_id ],
+                     [ '%d' ] );
+    }
+
+    wp_redirect(admin_url('/admin.php?page=superform'));
+    exit;
+  });
         
