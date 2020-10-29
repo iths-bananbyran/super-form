@@ -1,15 +1,15 @@
-const surname = document.querySelector("#surname")
+const firstname = document.querySelector("#firstname")
 const lastname = document.querySelector("#lastname")
 const email = document.querySelector("#email")
 const submit = document.querySelector("#submit")
 
-let surnameValidated = false
+let firstnameValidated = false
 let lastnameValidated = false
 let emailValidated = false
 
-surname.addEventListener("blur", (event) => {
-    validateText(event, "surname")
-    addCss(surnameValidated, surname)
+firstname.addEventListener("blur", (event) => {
+    validateText(event, "firstname")
+    addCss(firstnameValidated, firstname)
 })
 
 lastname.addEventListener("blur", (event) => {
@@ -30,9 +30,9 @@ function validateText(event, input) {
     const textRegex = /[a-zA-Z]+$/g
     let inputElem;
     if(event.target.value.match(textRegex)) {
-        if(input === "surname"){
-            surnameValidated = true
-            inputElem = document.querySelector('#surname-message')
+        if(input === "firstname"){
+            firstnameValidated = true
+            inputElem = document.querySelector('#firstname-message')
             inputElem.classList.remove('hidden')
             inputElem.innerHTML = "Good!"
            
@@ -44,15 +44,15 @@ function validateText(event, input) {
            
         }
     } else {
-        if(input === "surname"){
-            surnameValidated = false
+        if(input === "firstname"){
+            firstnameValidated = false
             if (event.target.value === "") {
-                inputElem = document.querySelector('#surname-message')
+                inputElem = document.querySelector('#firstname-message')
                 inputElem.classList.remove('hidden')
                 inputElem.innerHTML = "Please fill in a valid name"
                
             } else if (!event.target.value.match(textRegex)) {
-                inputElem = document.querySelector('#surname-message')
+                inputElem = document.querySelector('#firstname-message')
                 inputElem.classList.remove('hidden')
                 inputElem.innerHTML = "Please only use letters"
                
